@@ -1,0 +1,224 @@
+@import 'tailwindcss' source('../');
+
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+
+/* ------------------------------------------------------------------
+   KDS — "Gold leaf on black". Everything is ink, paper and one metal.
+   ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: dark;
+  --ink: #0b0a08;
+  --ink-2: #14120e;
+  --ink-3: #1d1a14;
+  --paper: #f2eadb;
+  --muted: #a39985;
+  --gold: #d9b25f;
+  --gold-hi: #f6dc92;
+  --gold-lo: #8f6a2a;
+  --line: rgb(217 178 95 / 0.2);
+  --line-soft: rgb(242 234 219 / 0.08);
+  --gold-foil: linear-gradient(
+    100deg,
+    var(--gold-lo) 0%,
+    var(--gold) 22%,
+    var(--gold-hi) 45%,
+    var(--gold) 62%,
+    var(--gold-lo) 100%
+  );
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-gold-hi: var(--gold-hi);
+  --color-gold-lo: var(--gold-lo);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-border: var(--line);
+  --font-display: 'Bricolage Grotesque', 'Trebuchet MS', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+  --font-mono: 'DM Mono', ui-monospace, Menlo, Consolas, monospace;
+  --font-sans: 'Bricolage Grotesque', system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+  html {
+    background: var(--ink);
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--gold);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--gold-hi);
+    outline-offset: 3px;
+  }
+}
+
+/* Film grain over everything — a little texture keeps black from going flat. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@utility foil {
+  background-image: var(--gold-foil);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+}
+
+@utility hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.foil-animate {
+  animation: foil-sweep 7s ease-in-out infinite;
+}
+@keyframes foil-sweep {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.rise {
+  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee,
+  .foil-animate,
+  .rise {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.btn-gold,
+.contact-button {
+  @apply inline-flex items-center gap-3 rounded-full px-7 py-4 font-mono text-xs uppercase tracking-[0.2em] text-ink transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-70;
+  background-image: var(--gold-foil);
+  background-size: 200% 100%;
+  box-shadow:
+    0 0 0 1px rgb(246 220 146 / 0.4) inset,
+    0 18px 40px -18px rgb(217 178 95 / 0.6);
+}
+.btn-ghost {
+  @apply inline-flex items-center gap-3 rounded-full border border-line px-7 py-4 font-mono text-xs uppercase tracking-[0.2em] text-paper transition-colors hover:border-gold hover:text-gold-hi;
+}
+
+.contact-input {
+  @apply w-full border-0 border-b border-line bg-transparent px-0 py-3 font-display text-xl text-paper placeholder:text-muted/50 transition-colors focus:border-gold focus:outline-none focus-visible:outline-none;
+}
+.contact-input:focus-visible {
+  box-shadow: 0 1px 0 0 var(--gold-hi);
+}
+select.contact-input option {
+  background: var(--ink-2);
+  color: var(--paper);
+}
+
+.prose {
+  overflow-wrap: anywhere;
+}
+.prose-kds {
+  --tw-prose-body: var(--paper);
+  --tw-prose-headings: var(--gold-hi);
+  --tw-prose-bold: var(--paper);
+  --tw-prose-links: var(--gold);
+  --tw-prose-bullets: var(--gold);
+  --tw-prose-quotes: var(--paper);
+  --tw-prose-quote-borders: var(--gold);
+  --tw-prose-hr: var(--line);
+}
+.prose-kds :where(h3) {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.spin-slow {
+  animation: spin 24s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--gold);
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin-slow {
+    animation: none;
+  }
+}
